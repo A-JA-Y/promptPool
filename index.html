@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PromptPool</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0c;
+    --ink2: #3a3832;
+    --ink3: #7a7872;
+    --paper: #f5f3ee;
+    --paper2: #eceae4;
+    --paper3: #e3e0d8;
+    --pool: #0ea5c8;
+    --pool-deep: #0779a1;
+    --pool-light: #e0f5fb;
+    --pool-pale: #f0fbfe;
+    --accent: #f0a500;
+    --accent-warm: #ff6b35;
+    --border: rgba(15,14,12,0.12);
+    --border-strong: rgba(15,14,12,0.22);
+    --r: 10px;
+    --rL: 16px;
+    --rXL: 24px;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(245,243,238,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-size: 22px; font-weight: 800;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo span { color: var(--pool); }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-links a {
+    font-size: 14px; color: var(--ink2); text-decoration: none;
+    font-weight: 500; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--pool); }
+  .nav-cta {
+    background: var(--ink); color: var(--paper);
+    border: none; padding: 8px 18px; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+  }
+  .nav-cta:hover { background: var(--pool-deep); }
+
+  /* HERO */
+  .hero {
+    padding: 140px 2rem 80px;
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--pool-light); color: var(--pool-deep);
+    border: 1px solid rgba(14,165,200,0.25);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 5px 12px; border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+  .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pool); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(38px, 5vw, 56px);
+    font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1.25rem;
+  }
+  h1 em { font-style: normal; color: var(--pool); }
+  .hero-sub {
+    font-size: 17px; color: var(--ink2); line-height: 1.7;
+    margin-bottom: 2rem; font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--pool); color: #fff;
+    border: none; padding: 12px 24px; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary:hover { background: var(--pool-deep); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--border-strong); padding: 12px 24px; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-ghost:hover { background: var(--paper2); }
+
+  .hero-stats {
+    display: flex; gap: 2rem; margin-top: 2.5rem;
+    padding-top: 2rem; border-top: 1px solid var(--border);
+  }
+  .stat-num {
+    font-family: var(--font-head); font-size: 26px; font-weight: 800;
+    color: var(--ink);
+  }
+  .stat-label { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    background: var(--paper2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--rXL);
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+  .hv-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .hv-title { font-size: 12px; color: var(--ink3); margin-left: 4px; font-weight: 500; }
+
+  .prompt-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--rL);
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+  .prompt-card:hover { border-color: var(--pool); box-shadow: 0 0 0 3px rgba(14,165,200,0.08); }
+  .pc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .pc-cat {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 100px;
+  }
+  .cat-writing { background: #fef3c7; color: #92400e; }
+  .cat-code { background: #e0f2fe; color: var(--pool-deep); }
+  .cat-analysis { background: #f3e8ff; color: #6d28d9; }
+  .pc-title {
+    font-family: var(--font-head); font-size: 13px; font-weight: 700;
+    color: var(--ink); margin: 8px 0 5px;
+  }
+  .pc-text { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+  .pc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+  .pc-meta { font-size: 11px; color: var(--ink3); }
+  .pc-copy {
+    font-size: 11px; color: var(--pool); font-weight: 600;
+    background: var(--pool-light); padding: 3px 10px; border-radius: 100px;
+    border: none; cursor: pointer; font-family: var(--font-body);
+  }
+
+  /* SECTION SHARED */
+  section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--pool); margin-bottom: 0.75rem;
+  }
+  h2 {
+    font-family: var(--font-head);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800; line-height: 1.15; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1rem;
+  }
+  .section-sub { font-size: 17px; color: var(--ink2); max-width: 560px; font-weight: 300; }
+
+  /* HOW IT WORKS */
+  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .how-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--rL);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .how-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--pool), var(--pool-deep));
+  }
+  .how-num {
+    font-family: var(--font-head); font-size: 48px; font-weight: 800;
+    color: var(--paper2); line-height: 1; margin-bottom: 1rem;
+  }
+  .how-icon { font-size: 28px; margin-bottom: 0.75rem; }
+  .how-title { font-family: var(--font-head); font-size: 18px; font-weight: 700; margin-bottom: 0.5rem; }
+  .how-desc { font-size: 14px; color: var(--ink2); line-height: 1.6; }
+
+  /* LIVE DEMO */
+  #demo { background: var(--paper2); }
+  .demo-wrap {
+    background: var(--paper);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--rXL);
+    overflow: hidden;
+    margin-top: 2.5rem;
+    box-shadow: 0 20px 60px rgba(15,14,12,0.08);
+  }
+  .demo-toolbar {
+    background: var(--paper2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .demo-search {
+    flex: 1; background: var(--paper);
+    border: 1px solid var(--border-strong); border-radius: var(--r);
+    padding: 8px 14px; font-family: var(--font-body); font-size: 14px;
+    color: var(--ink); outline: none;
+  }
+  .demo-search:focus { border-color: var(--pool); }
+  .demo-search::placeholder { color: var(--ink3); }
+  .demo-filters { display: flex; gap: 8px; }
+  .filter-btn {
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 100px; padding: 6px 14px;
+    font-family: var(--font-body); font-size: 12px; font-weight: 600;
+    color: var(--ink2); cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn.active, .filter-btn:hover { background: var(--pool); color: #fff; border-color: var(--pool); }
+
+  .demo-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--border);
+    max-height: 500px; overflow-y: auto;
+  }
+  .demo-prompt {
+    background: var(--paper);
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.1s;
+    position: relative;
+  }
+  .demo-prompt:hover { background: var(--pool-pale); }
+  .demo-prompt.selected { background: var(--pool-pale); border-left: 3px solid var(--pool); }
+  .dp-cat {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--pool); margin-bottom: 6px;
+  }
+  .dp-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .dp-preview { font-size: 13px; color: var(--ink2); line-height: 1.5; }
+  .dp-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+  .dp-tag {
+    font-size: 11px; background: var(--paper2);
+    border: 1px solid var(--border); border-radius: 100px;
+    padding: 2px 8px; color: var(--ink3);
+  }
+
+  /* DETAIL PANEL */
+  .demo-detail {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem;
+    display: none;
+  }
+  .demo-detail.show { display: block; }
+  .dd-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+  .dd-prompt-text {
+    background: var(--paper2); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 1rem 1.25rem;
+    font-size: 14px; line-height: 1.7; color: var(--ink2);
+    font-family: 'Courier New', monospace; white-space: pre-wrap;
+    margin-bottom: 1rem;
+  }
+  .dd-actions { display: flex; gap: 10px; margin-bottom: 1.25rem; }
+  .dd-btn {
+    background: var(--pool); color: #fff;
+    border: none; padding: 9px 18px; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .dd-btn:hover { background: var(--pool-deep); }
+  .dd-btn.outline {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--border-strong);
+  }
+  .dd-btn.outline:hover { background: var(--paper2); }
+  .dd-result-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .dd-result {
+    background: var(--pool-pale);
+    border: 1px solid rgba(14,165,200,0.2);
+    border-radius: var(--r); padding: 1rem 1.25rem;
+    font-size: 14px; line-height: 1.7; color: var(--ink);
+    min-height: 60px;
+  }
+  .typing-cursor { display: inline-block; width: 2px; height: 16px; background: var(--pool); animation: blink 1s infinite; vertical-align: middle; margin-left: 2px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* FEATURES */
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .feat-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--rL);
+    padding: 1.5rem;
+  }
+  .feat-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--pool-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 1rem;
+  }
+  .feat-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; margin-bottom: 0.4rem; }
+  .feat-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+  /* CTA */
+  .cta-section {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    border-radius: var(--rXL);
+    padding: 5rem 2rem;
+    margin: 0 2rem 5rem;
+  }
+  .cta-section h2 { color: var(--paper); }
+  .cta-section .section-sub { color: rgba(245,243,238,0.65); margin: 0 auto 2rem; }
+  .btn-pool { background: var(--pool); color: #fff; }
+  .btn-pool:hover { background: var(--pool-deep); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .footer-logo { font-family: var(--font-head); font-size: 18px; font-weight: 800; }
+  .footer-logo span { color: var(--pool); }
+  .footer-note { font-size: 13px; color: var(--ink3); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    background: var(--ink); color: var(--paper);
+    padding: 12px 20px; border-radius: var(--r);
+    font-size: 14px; font-weight: 500;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media(max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 100px 1.25rem 3rem; gap: 2rem; }
+    .how-grid, .features-grid { grid-template-columns: 1fr; }
+    .demo-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1.25rem; }
+    .nav-links { display: none; }
+    section { padding: 3rem 1.25rem; }
+    .cta-section { margin: 0 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Prompt<span>Pool</span></div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#demo">Browse prompts</a>
+    <a href="#features">Features</a>
+    <a href="https://github.com" target="_blank">GitHub ↗</a>
+  </div>
+  <button class="nav-cta" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try free →</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Open Source · 1,800+ Prompts
+    </div>
+    <h1>The <em>prompt library</em> you actually wanted</h1>
+    <p class="hero-sub">Stop digging through Reddit threads. PromptPool is a free, open-source library of 1,800+ professionally cleaned prompts for every task—curated by an LLM pipeline so every prompt just works.</p>
+    <div class="hero-actions">
+      <button class="btn-primary btn-pool" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+        Browse prompts →
+      </button>
+      <a class="btn-ghost" href="https://github.com" target="_blank">⭐ Star on GitHub</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">1,800+</div>
+        <div class="stat-label">Curated prompts</div>
+      </div>
+      <div>
+        <div class="stat-num">24+</div>
+        <div class="stat-label">Categories</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Free & open source</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hv-header">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <span class="hv-title">promptpool.dev — browse</span>
+    </div>
+
+    <div class="prompt-card" onclick="copyPrompt(this, 'You are a world-class copywriter. Write a compelling product description for [product] that targets [audience] and highlights [key benefit].')">
+      <div class="pc-top">
+        <span class="pc-cat cat-writing">✍️ Writing</span>
+      </div>
+      <div class="pc-title">Product Description Writer</div>
+      <div class="pc-text">Write a compelling product description that converts browsers into buyers, with clear value proposition and CTA.</div>
+      <div class="pc-footer">
+        <span class="pc-meta">⭐ 4.9 · 2.1k uses</span>
+        <button class="pc-copy">Copy</button>
+      </div>
+    </div>
+
+    <div class="prompt-card" onclick="copyPrompt(this, 'Review the following code and identify bugs, performance issues, and areas for improvement. Format your response as: Issues Found, Suggested Fixes, and Refactored Code.')">
+      <div class="pc-top">
+        <span class="pc-cat cat-code">💻 Code</span>
+      </div>
+      <div class="pc-title">Code Review Expert</div>
+      <div class="pc-text">Deep-dive code review that catches bugs, flags performance issues, and suggests refactors with examples.</div>
+      <div class="pc-footer">
+        <span class="pc-meta">⭐ 4.8 · 3.4k uses</span>
+        <button class="pc-copy">Copy</button>
+      </div>
+    </div>
+
+    <div class="prompt-card" onclick="copyPrompt(this, 'Analyze the following data and provide: 1) Key trends and patterns 2) Anomalies or outliers 3) Actionable recommendations 4) Visualization suggestions. Data: [paste data here]')">
+      <div class="pc-top">
+        <span class="pc-cat cat-analysis">📊 Analysis</span>
+      </div>
+      <div class="pc-title">Data Insights Generator</div>
+      <div class="pc-text">Turn raw data into structured insights with trend analysis, anomaly detection, and clear recommendations.</div>
+      <div class="pc-footer">
+        <span class="pc-meta">⭐ 4.7 · 1.8k uses</span>
+        <button class="pc-copy">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2>From messy forums to clean prompts in seconds</h2>
+    <p class="section-sub">We built a custom LLM pipeline that scrapes, cleans, and scores prompts so you get only the ones that actually work.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-icon">🌊</div>
+        <div class="how-title">We scrape the web</div>
+        <div class="how-desc">Automated crawlers pull prompts from community forums, blogs, and specialized channels—thousands of raw entries daily.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-icon">🧹</div>
+        <div class="how-title">LLM pipeline cleans</div>
+        <div class="how-desc">A Qwen + Claude pipeline filters noise, removes duplicates, standardizes formatting, and scores quality automatically.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-icon">✨</div>
+        <div class="how-title">You get clean prompts</div>
+        <div class="how-desc">Browse 1,800+ prompts with consistent formatting, quality scores, and live AI preview—all completely free.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+<section id="demo">
+  <div class="section-inner">
+    <div class="section-label">Live demo</div>
+    <h2>Browse. Click. Use. Done.</h2>
+    <p class="section-sub">Try it right now. Search, filter by category, and run any prompt against live AI to preview the output before you copy.</p>
+
+    <div class="demo-wrap">
+      <div class="demo-toolbar">
+        <input class="demo-search" type="text" id="searchInput" placeholder="Search 1,800+ prompts... e.g. 'cold email', 'SQL', 'investor pitch'" oninput="filterPrompts()" />
+        <div class="demo-filters">
+          <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+          <button class="filter-btn" onclick="setFilter('writing',this)">Writing</button>
+          <button class="filter-btn" onclick="setFilter('code',this)">Code</button>
+          <button class="filter-btn" onclick="setFilter('business',this)">Business</button>
+          <button class="filter-btn" onclick="setFilter('research',this)">Research</button>
+        </div>
+      </div>
+
+      <div class="demo-grid" id="promptGrid"></div>
+
+      <div class="demo-detail" id="detailPanel">
+        <div class="dd-label">Full Prompt Template</div>
+        <div class="dd-prompt-text" id="ddPromptText"></div>
+        <div class="dd-actions">
+          <button class="dd-btn" onclick="runDemo()">▶ Run live preview</button>
+          <button class="dd-btn outline" onclick="copySelected()">Copy prompt</button>
+          <button class="dd-btn outline" onclick="closeDetail()">✕ Close</button>
+        </div>
+        <div id="ddResultArea" style="display:none">
+          <div class="dd-result-label">AI Output Preview</div>
+          <div class="dd-result" id="ddResult"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="background:var(--paper)">
+  <div class="section-inner">
+    <div class="section-label">Why PromptPool</div>
+    <h2>Everything you need, nothing you don't</h2>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Instant search</div>
+        <div class="feat-desc">Full-text search across every prompt. Find exactly what you need without scrolling through endless lists.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <div class="feat-title">Live AI preview</div>
+        <div class="feat-desc">Test any prompt against a real AI model before copying it. See the output, then decide if it fits your workflow.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🧼</div>
+        <div class="feat-title">Quality scored</div>
+        <div class="feat-desc">Every prompt is rated by our LLM pipeline for clarity, specificity, and output quality. No noise, no filler.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📁</div>
+        <div class="feat-title">24 categories</div>
+        <div class="feat-desc">Writing, code, business, research, marketing, design, education, and more. Organized so you find it fast.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔓</div>
+        <div class="feat-title">Fully open source</div>
+        <div class="feat-desc">MIT licensed. Fork it, self-host it, contribute to it. PromptPool belongs to the community.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔄</div>
+        <div class="feat-title">Daily updates</div>
+        <div class="feat-desc">New prompts added every day through our automated scraping and cleaning pipeline. Always fresh.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="section-inner">
+  <div class="cta-section">
+    <h2>Stop searching. Start prompting.</h2>
+    <p class="section-sub">1,800+ clean, tested prompts—free forever. No account required.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-primary btn-pool" style="font-size:16px;padding:14px 28px" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Browse prompts →</button>
+      <a class="btn-ghost" href="https://github.com" target="_blank" style="color:rgba(245,243,238,0.8);border-color:rgba(245,243,238,0.25)">View on GitHub</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Prompt<span>Pool</span></div>
+  <div class="footer-note">Free & open source · MIT License · 1,800+ prompts</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PROMPTS = [
+  {id:1,cat:'writing',catLabel:'Writing',title:'Cold Email That Actually Gets Replies',preview:'Write a concise, personalized cold email for [context] that leads with value and ends with a clear ask.',full:`Write a cold email for the following context:
+Product/Service: [your product]
+Target: [recipient's role and company type]
+Key benefit: [main value prop]
+
+Requirements:
+- Subject line: curiosity-driven, under 8 words
+- Opening: reference something specific about them
+- Body: 2-3 sentences on value, no fluff
+- CTA: one clear, low-friction ask
+- Tone: confident, peer-to-peer, not salesy`,tags:['email','outreach'],rating:'4.9',uses:'3.2k'},
+  {id:2,cat:'code',catLabel:'Code',title:'Code Review Expert',preview:'Deep code review covering bugs, performance issues, security risks, and refactoring opportunities.',full:`You are a senior software engineer conducting a thorough code review.
+
+Review the following code for:
+1. Bugs and logic errors
+2. Performance bottlenecks
+3. Security vulnerabilities
+4. Code smell and readability
+5. Test coverage gaps
+
+For each issue found:
+- Severity: Critical / Major / Minor
+- Explanation: what's wrong and why it matters
+- Fix: concrete corrected code snippet
+
+End with a refactored version of the most critical section.
+
+Code to review:
+[paste code here]`,tags:['code','review'],rating:'4.8',uses:'4.1k'},
+  {id:3,cat:'business',catLabel:'Business',title:'Investor Pitch One-Pager',preview:'Generate a one-page investor summary with problem, solution, traction, and ask in tight, compelling prose.',full:`Create a one-page investor summary for a startup with the following info:
+Company: [name]
+Stage: [pre-seed/seed/Series A]
+Industry: [sector]
+Details: [paste company description]
+
+Structure:
+**The Problem** (2 sentences max — make it visceral)
+**Our Solution** (2-3 sentences — what you do and how)
+**Why Now** (market timing, tail winds)
+**Traction** (key metrics, growth, social proof)
+**Business Model** (how you make money)
+**The Ask** (amount, use of funds, milestones)
+
+Tone: direct, confident, data-driven. No buzzwords.`,tags:['startup','fundraising'],rating:'4.9',uses:'2.7k'},
+  {id:4,cat:'research',catLabel:'Research',title:'Literature Review Synthesizer',preview:'Synthesize multiple papers or sources into a cohesive literature review with gaps and future directions.',full:`You are an academic research assistant. Synthesize the following sources into a structured literature review.
+
+Sources: [paste abstracts or paper summaries]
+Research question: [your question]
+
+Output format:
+1. **Overview** — common themes and consensus (3-4 sentences)
+2. **Key Findings** — bullet list of the most important discoveries
+3. **Methodological Approaches** — how researchers studied this
+4. **Contradictions & Debates** — where scholars disagree and why
+5. **Research Gaps** — what hasn't been studied yet
+6. **Future Directions** — promising next steps
+
+Use academic tone. Cite sources by [Author, Year] inline.`,tags:['academic','research'],rating:'4.7',uses:'1.9k'},
+  {id:5,cat:'writing',catLabel:'Writing',title:'Long-form Blog Post Framework',preview:'Create a detailed, SEO-aware blog post outline with hooks, H2s, and CTAs for any topic.',full:`You are an expert content strategist. Create a complete long-form blog post for:
+
+Topic: [topic]
+Target audience: [who will read this]
+Primary keyword: [SEO keyword]
+Tone: [professional/casual/technical]
+Length target: [~1500 / 2000 / 3000 words]
+
+Deliverables:
+- Attention-grabbing headline (5 options)
+- Hook intro (150 words) — story, stat, or provocative question
+- Full outline with H2s and H3s
+- Key points for each section (not full prose, just bullets)
+- Conclusion with CTA
+- Meta description (under 160 chars)
+- 5 related internal link anchor text suggestions`,tags:['seo','content'],rating:'4.8',uses:'5.6k'},
+  {id:6,cat:'code',catLabel:'Code',title:'SQL Query Optimizer',preview:'Analyze a slow SQL query and return an optimized version with explanation of changes made.',full:`You are a senior DBA and query optimization expert.
+
+Analyze the following SQL query and:
+1. Identify performance bottlenecks (missing indexes, N+1, full scans, etc.)
+2. Rewrite the query with optimizations applied
+3. Explain each change you made and why it helps
+4. Suggest relevant indexes to create (with CREATE INDEX statements)
+5. Estimate the performance improvement (rough %)
+
+Database: [PostgreSQL / MySQL / SQLite / other]
+Table sizes: [optional — e.g., orders table: 10M rows]
+
+Query:
+[paste your SQL here]`,tags:['sql','database'],rating:'4.7',uses:'3.8k'},
+  {id:7,cat:'business',catLabel:'Business',title:'SWOT Analysis Generator',preview:'Produce a thorough SWOT for any company, product, or decision using structured strategic thinking.',full:`Conduct a comprehensive SWOT analysis for:
+Subject: [company / product / decision / strategy]
+Context: [industry, stage, competitive landscape]
+
+Format:
+
+**STRENGTHS** (internal positives)
+- List 5-7 genuine competitive advantages
+- For each: why it matters strategically
+
+**WEAKNESSES** (internal negatives)
+- List 4-6 honest internal gaps or risks
+- For each: business impact
+
+**OPPORTUNITIES** (external positives)
+- List 5-7 market or trend opportunities
+- For each: how to capitalize
+
+**THREATS** (external negatives)
+- List 4-6 external risks or competitive pressures
+- For each: mitigation approach
+
+**Strategic priorities** — Top 3 actions based on this SWOT`,tags:['strategy','planning'],rating:'4.6',uses:'2.1k'},
+  {id:8,cat:'research',catLabel:'Research',title:'Competitive Intelligence Brief',preview:'Build a structured competitive analysis for any company using publicly available information.',full:`You are a competitive intelligence analyst. Create a detailed competitive brief for:
+
+My company: [your company + product]
+Competitor: [competitor name]
+
+Research and structure the following:
+1. **Company Overview** — size, funding, market position
+2. **Product Analysis** — features, pricing tiers, positioning
+3. **Strengths vs Us** — where they outperform you
+4. **Weaknesses vs Us** — where you have the edge
+5. **Customer Sentiment** — what users love/hate (use review patterns)
+6. **Go-to-Market** — channels, messaging, ICP
+7. **Likely Next Moves** — product roadmap signals
+8. **Our Recommended Response** — 3 tactical actions
+
+Be specific. Avoid vague generalities.`,tags:['competitive','strategy'],rating:'4.8',uses:'1.6k'},
+];
+
+let activeFilter = 'all';
+let selectedId = null;
+
+function renderPrompts(list) {
+  const grid = document.getElementById('promptGrid');
+  if(!list.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--ink3)">No prompts found. Try a different search or filter.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(p => `
+    <div class="demo-prompt ${selectedId===p.id?'selected':''}" onclick="selectPrompt(${p.id})">
+      <div class="dp-cat">${p.catLabel}</div>
+      <div class="dp-title">${p.title}</div>
+      <div class="dp-preview">${p.preview}</div>
+      <div class="dp-footer">
+        <span class="dp-tag">⭐ ${p.rating} · ${p.uses} uses</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterPrompts() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let list = PROMPTS;
+  if(activeFilter !== 'all') list = list.filter(p => p.cat === activeFilter);
+  if(q) list = list.filter(p => p.title.toLowerCase().includes(q) || p.preview.toLowerCase().includes(q) || p.tags.some(t => t.includes(q)));
+  renderPrompts(list);
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterPrompts();
+}
+
+function selectPrompt(id) {
+  selectedId = id;
+  const p = PROMPTS.find(x => x.id === id);
+  document.getElementById('ddPromptText').textContent = p.full;
+  document.getElementById('detailPanel').classList.add('show');
+  document.getElementById('ddResultArea').style.display = 'none';
+  document.getElementById('ddResult').innerHTML = '';
+  filterPrompts();
+  setTimeout(() => document.getElementById('detailPanel').scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+}
+
+function closeDetail() {
+  selectedId = null;
+  document.getElementById('detailPanel').classList.remove('show');
+  filterPrompts();
+}
+
+function copySelected() {
+  if(!selectedId) return;
+  const p = PROMPTS.find(x => x.id === selectedId);
+  navigator.clipboard.writeText(p.full).then(() => showToast('Prompt copied to clipboard!'));
+}
+
+const DEMO_OUTPUTS = {
+  1: `**Subject:** Quick question about [Company's] growth strategy
+
+Hi [Name],
+
+I noticed [Company] just expanded into [market] — congrats on the momentum. We help companies like yours [specific benefit, e.g., "reduce onboarding drop-off by 40%"] without changing your existing stack.
+
+Worth a 15-minute call this week? I can show you exactly how [similar company] did it.
+
+[Your name]`,
+  2: `**Code Review Report**
+
+**Critical Issues:**
+• Line 47: SQL injection vulnerability — user input is concatenated directly into query string. Fix: use parameterized queries.
+• Line 83: N+1 query detected inside loop — will fire 1 query per record. Fix: batch with a single JOIN query.
+
+**Major Issues:**
+• Lines 12-34: No error handling on async calls — unhandled promise rejections will crash silently.
+• Missing input validation on the \`userId\` parameter.
+
+**Refactored critical section:**
+\`\`\`js
+const users = await db.query(
+  'SELECT * FROM users WHERE id = $1',
+  [userId]
+);
+\`\`\``,
+  3: `**TechFlow — Investor Summary**
+
+**The Problem**
+B2B sales teams waste 40% of their time on manual CRM updates. That's not a productivity issue—it's a revenue leak.
+
+**Our Solution**
+TechFlow auto-logs every call, email, and meeting into your CRM using voice AI, eliminating manual entry entirely.
+
+**Traction**
+$180K ARR · 40% MoM growth · 12 design partners · NPS 72
+
+**The Ask**
+Raising $1.5M pre-seed to hire 2 engineers and reach $500K ARR by Q3.`,
+  4: `**Literature Review: Remote Work Productivity**
+
+**Overview**
+Research from 2020-2024 shows mixed outcomes for remote work productivity, with strong consensus that impact varies significantly by role type, team cohesion, and individual personality.
+
+**Key Findings**
+• Knowledge workers report 13-22% productivity gains when working from home (Stanford, 2021)
+• Collaboration tasks show a 18% efficiency decline without structured async practices
+• Mental health outcomes improved for workers with dedicated home offices
+
+**Research Gaps**
+Longitudinal studies beyond 2 years remain scarce. Cross-cultural comparisons are underrepresented.`,
+  5: `**5 Headline Options:**
+1. "Why 90% of SaaS companies get churn wrong (and how to fix it)"
+2. "The churn reduction playbook that recovered $2M ARR"
+3. "Stop fighting churn. Start preventing it."
+4. "The counterintuitive reason your best customers leave"
+5. "Churn is a symptom. Here's what to treat."
+
+**Hook (150 words):**
+In 2022, we watched $180,000 in ARR walk out the door in a single quarter. Our NPS was 52. Support tickets were low. On paper, everything looked fine. The problem wasn't our product—it was what we weren't seeing. Churn rarely announces itself...`,
+  6: `**Performance Analysis:**
+
+Issues found:
+• Full table scan on \`orders\` (missing index on \`created_at\`)
+• Correlated subquery in SELECT runs once per row (N+1)
+• Unnecessary DISTINCT on indexed column
+
+**Optimized Query:**
+\`\`\`sql
+SELECT o.id, o.total, u.email
+FROM orders o
+INNER JOIN users u ON u.id = o.user_id
+WHERE o.created_at >= NOW() - INTERVAL '30 days'
+  AND o.status = 'completed'
+ORDER BY o.created_at DESC;
+\`\`\`
+
+**Indexes to add:**
+\`\`\`sql
+CREATE INDEX idx_orders_created_status 
+ON orders(created_at, status);
+\`\`\`
+Estimated improvement: ~8x faster on 10M row table.`,
+  7: `**SWOT Analysis: Notion**
+
+**STRENGTHS**
+• Extreme flexibility — adapts to any workflow
+• Strong brand love and word-of-mouth growth
+• Broad template ecosystem reduces onboarding friction
+
+**WEAKNESSES**
+• Steep learning curve for non-technical users
+• Performance degrades on large databases
+• No native offline mode
+
+**OPPORTUNITIES**
+• AI integration is still early — first-mover advantage in AI-native notes
+• Enterprise expansion (currently SMB-heavy)
+
+**THREATS**
+• Linear, Coda, and Obsidian are each capturing specific niches
+• Microsoft Loop deeply integrated with M365 ecosystem
+
+**Top 3 Strategic Priorities:**
+1. Launch AI features before competitors solidify positioning
+2. Build enterprise SSO and admin controls
+3. Optimize mobile performance`,
+  8: `**Competitive Brief: Notion vs Coda**
+
+**Company Overview**
+Coda: ~$130M raised, Series D, ~200 employees, SF-based. Positioned as "the doc that can do everything."
+
+**Product Analysis**
+• Pricing: Free tier limited; Team plan $10/user/mo (vs Notion's $8)
+• Unique: Packs ecosystem — pre-built integrations that behave like mini-apps
+• Weakness: Steeper learning curve than Notion; smaller template library
+
+**Strengths vs Notion**
+✓ More powerful formula/automation layer
+✓ Better for data-heavy use cases (internal tools, trackers)
+
+**Weaknesses vs Notion**
+✗ 3x smaller user base and community
+✗ Brand awareness significantly lower
+
+**Our Recommended Response**
+1. Double down on ease-of-use messaging vs Coda's complexity
+2. Build data/table features that close the gap
+3. Target Coda churned users with migration wizard`,
+};
+
+async function runDemo() {
+  if(!selectedId) return;
+  const resultArea = document.getElementById('ddResultArea');
+  const resultEl = document.getElementById('ddResult');
+  resultArea.style.display = 'block';
+  resultEl.innerHTML = '<span class="typing-cursor"></span>';
+
+  const output = DEMO_OUTPUTS[selectedId] || 'Output preview not available for this prompt in the demo.';
+
+  await new Promise(r => setTimeout(r, 600));
+
+  let i = 0;
+  resultEl.innerHTML = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typing-cursor';
+
+  function typeChar() {
+    if(i < output.length) {
+      resultEl.textContent += output[i];
+      resultEl.appendChild(cursor);
+      i++;
+      setTimeout(typeChar, 8 + Math.random() * 12);
+    } else {
+      cursor.remove();
+      resultEl.innerHTML = resultEl.textContent
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code style="background:var(--paper2);padding:1px 5px;border-radius:4px;font-size:12px">$1</code>')
+        .replace(/\n/g, '<br>');
+    }
+  }
+  typeChar();
+  resultArea.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function copyPrompt(card, text) {
+  navigator.clipboard.writeText(text).then(() => showToast('Prompt copied!'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderPrompts(PROMPTS);
+</script>
+</body>
+</html>
