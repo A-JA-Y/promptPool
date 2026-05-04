@@ -40,7 +40,7 @@
     overflow-x: hidden;
   }
 
-  /* NAV */
+  /* ─── NAV ─── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: rgba(245,243,238,0.88);
@@ -48,13 +48,14 @@
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
     display: flex; align-items: center; justify-content: space-between;
-    height: 60px;
+    height: 64px;
   }
   .nav-logo {
     font-family: var(--font-head);
     font-size: 22px; font-weight: 800;
     color: var(--ink);
     display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
   }
   .nav-logo span { color: var(--pool); }
   .nav-links { display: flex; align-items: center; gap: 2rem; }
@@ -64,14 +65,51 @@
   }
   .nav-links a:hover { color: var(--pool); }
   .nav-cta {
-    background: var(--ink); color: var(--paper);
-    border: none; padding: 8px 18px; border-radius: var(--r);
-    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    background: var(--pool); color: #fff;
+    border: none; padding: 10px 22px; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 14px; font-weight: 600;
     cursor: pointer; transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
   }
-  .nav-cta:hover { background: var(--pool-deep); }
+  .nav-cta:hover { background: var(--pool-deep); transform: translateY(-1px); }
 
-  /* HERO */
+  /* Mobile hamburger */
+  .hamburger {
+    display: none; background: none; border: none; cursor: pointer;
+    width: 32px; height: 32px; position: relative;
+    flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  }
+  .hamburger span {
+    display: block; width: 22px; height: 2px; background: var(--ink);
+    border-radius: 2px; transition: all 0.3s;
+  }
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
+    background: var(--paper);
+    z-index: 99; padding: 2rem;
+    flex-direction: column; gap: 0;
+    animation: menuSlide 0.3s ease;
+  }
+  @keyframes menuSlide { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  .mobile-menu.show { display: flex; }
+  .mobile-menu a {
+    font-size: 18px; color: var(--ink); text-decoration: none;
+    font-weight: 500; padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { color: var(--pool); }
+  .mobile-menu .nav-cta {
+    margin-top: 1.5rem; text-align: center; font-size: 16px;
+    padding: 14px 24px;
+  }
+
+  /* ─── HERO ─── */
   .hero {
     padding: 140px 2rem 80px;
     max-width: 1100px; margin: 0 auto;
@@ -176,7 +214,7 @@
     border: none; cursor: pointer; font-family: var(--font-body);
   }
 
-  /* SECTION SHARED */
+  /* ─── SECTIONS ─── */
   section { padding: 5rem 2rem; }
   .section-inner { max-width: 1100px; margin: 0 auto; }
   .section-label {
@@ -191,7 +229,7 @@
   }
   .section-sub { font-size: 17px; color: var(--ink2); max-width: 560px; font-weight: 300; }
 
-  /* HOW IT WORKS */
+  /* ─── HOW IT WORKS ─── */
   .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
   .how-card {
     background: var(--paper);
@@ -214,7 +252,7 @@
   .how-title { font-family: var(--font-head); font-size: 18px; font-weight: 700; margin-bottom: 0.5rem; }
   .how-desc { font-size: 14px; color: var(--ink2); line-height: 1.6; }
 
-  /* LIVE DEMO */
+  /* ─── LIVE DEMO ─── */
   #demo { background: var(--paper2); }
   .demo-wrap {
     background: var(--paper);
@@ -314,7 +352,7 @@
   .typing-cursor { display: inline-block; width: 2px; height: 16px; background: var(--pool); animation: blink 1s infinite; vertical-align: middle; margin-left: 2px; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* FEATURES */
+  /* ─── FEATURES ─── */
   .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
   .feat-card {
     background: var(--paper);
@@ -331,7 +369,170 @@
   .feat-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; margin-bottom: 0.4rem; }
   .feat-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
 
-  /* CTA */
+  /* ─── PRICING ─── */
+  #pricing { background: var(--paper2); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem;
+  }
+  .price-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--rL);
+    padding: 2rem;
+    display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .price-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,14,12,0.1); }
+  .price-card.featured {
+    border: 2px solid var(--pool);
+    position: relative;
+  }
+  .price-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--pool); color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 14px; border-radius: 100px;
+  }
+  .price-name {
+    font-family: var(--font-head); font-size: 20px; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .price-desc { font-size: 13px; color: var(--ink3); margin-bottom: 1.5rem; }
+  .price-amount {
+    font-family: var(--font-head); font-size: 42px; font-weight: 800;
+    color: var(--ink); margin-bottom: 0.25rem;
+  }
+  .price-amount .per { font-size: 16px; font-weight: 400; color: var(--ink3); }
+  .price-features {
+    list-style: none; margin: 1.5rem 0; flex: 1;
+  }
+  .price-features li {
+    font-size: 14px; color: var(--ink2); padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .price-features li::before { content: '✓'; color: var(--pool); font-weight: 700; font-size: 14px; }
+  .price-btn {
+    width: 100%; padding: 12px; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    border: none; margin-top: auto;
+  }
+  .price-btn.primary { background: var(--pool); color: #fff; }
+  .price-btn.primary:hover { background: var(--pool-deep); }
+  .price-btn.outline { background: transparent; color: var(--ink); border: 1px solid var(--border-strong); }
+  .price-btn.outline:hover { background: var(--paper2); }
+
+  /* ─── MEET THE CREATOR ─── */
+  #about {
+    background: var(--paper);
+  }
+  .creator-card {
+    margin-top: 3rem;
+    display: flex; align-items: center; gap: 3rem;
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    border-radius: var(--rXL);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .creator-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--pool), var(--accent));
+  }
+  .creator-avatar {
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pool-light), var(--pool-pale));
+    border: 3px solid var(--pool);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 72px;
+    flex-shrink: 0;
+    box-shadow: 0 8px 30px rgba(14,165,200,0.15);
+  }
+  .creator-info { flex: 1; }
+  .creator-name {
+    font-family: var(--font-head); font-size: 28px; font-weight: 800;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .creator-role {
+    font-size: 15px; color: var(--pool); font-weight: 600;
+    margin-bottom: 1.25rem;
+  }
+  .creator-bio {
+    font-size: 15px; color: var(--ink2); line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .creator-socials { display: flex; gap: 10px; }
+  .creator-socials a {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--paper); border: 1px solid var(--border);
+    font-size: 16px; text-decoration: none;
+    transition: all 0.15s;
+  }
+  .creator-socials a:hover { background: var(--pool); color: #fff; border-color: var(--pool); }
+
+  /* ─── CONTACT US ─── */
+  #contact { background: var(--paper2); }
+  .contact-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+    margin-top: 3rem;
+  }
+  .contact-info-card {
+    display: flex; flex-direction: column; gap: 2rem;
+  }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 1rem;
+  }
+  .contact-detail-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--pool-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .contact-detail-text h4 {
+    font-family: var(--font-head); font-size: 16px; font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .contact-detail-text p { font-size: 14px; color: var(--ink2); }
+  .contact-form-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--rL);
+    padding: 2rem;
+  }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block; font-size: 13px; font-weight: 600; color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border-strong); border-radius: var(--r);
+    font-family: var(--font-body); font-size: 14px; color: var(--ink);
+    background: var(--paper); outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--pool); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%; padding: 13px;
+    background: var(--pool); color: #fff;
+    border: none; border-radius: var(--r);
+    font-family: var(--font-body); font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .form-submit:hover { background: var(--pool-deep); }
+
+  /* ─── CTA ─── */
   .cta-section {
     background: var(--ink);
     color: var(--paper);
@@ -345,18 +546,113 @@
   .btn-pool { background: var(--pool); color: #fff; }
   .btn-pool:hover { background: var(--pool-deep); }
 
-  /* FOOTER */
+  /* ─── FOOTER ─── */
   footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem;
-    display: flex; align-items: center; justify-content: space-between;
+    background: var(--ink);
+    color: rgba(245,243,238,0.75);
+    padding: 4rem 2rem 2rem;
+  }
+  .footer-inner {
     max-width: 1100px; margin: 0 auto;
   }
-  .footer-logo { font-family: var(--font-head); font-size: 18px; font-weight: 800; }
-  .footer-logo span { color: var(--pool); }
-  .footer-note { font-size: 13px; color: var(--ink3); }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(245,243,238,0.12);
+  }
+  .footer-brand .footer-logo {
+    font-family: var(--font-head); font-size: 22px; font-weight: 800;
+    color: var(--paper); margin-bottom: 1rem;
+  }
+  .footer-brand .footer-logo span { color: var(--pool); }
+  .footer-brand p {
+    font-size: 14px; line-height: 1.7; color: rgba(245,243,238,0.55);
+    max-width: 280px;
+  }
+  .footer-col h5 {
+    font-family: var(--font-head); font-size: 14px; font-weight: 700;
+    color: var(--paper); margin-bottom: 1rem;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .footer-col a {
+    display: block; font-size: 14px; color: rgba(245,243,238,0.55);
+    text-decoration: none; padding: 5px 0; transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--pool); }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 1.5rem;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-bottom p { font-size: 13px; color: rgba(245,243,238,0.4); }
+  .footer-bottom-links { display: flex; gap: 1.5rem; }
+  .footer-bottom-links a {
+    font-size: 13px; color: rgba(245,243,238,0.4);
+    text-decoration: none; transition: color 0.15s;
+  }
+  .footer-bottom-links a:hover { color: var(--pool); }
 
-  /* TOAST */
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(15,14,12,0.55);
+    backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--paper);
+    border-radius: var(--rXL);
+    width: 100%; max-width: 480px;
+    padding: 2.5rem;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(15,14,12,0.25);
+    animation: modalSlide 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-height: 90vh; overflow-y: auto;
+  }
+  @keyframes modalSlide { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--paper2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer; color: var(--ink3);
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--ink); color: var(--paper); }
+
+  .modal-title {
+    font-family: var(--font-head); font-size: 24px; font-weight: 800;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .modal-subtitle {
+    font-size: 14px; color: var(--ink3); margin-bottom: 1.75rem;
+  }
+
+  /* ─── SUCCESS STATE ─── */
+  .form-success {
+    display: none; text-align: center; padding: 2rem 0;
+  }
+  .form-success.show { display: block; }
+  .form-success .success-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--pool-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; margin: 0 auto 1rem;
+  }
+  .form-success h3 {
+    font-family: var(--font-head); font-size: 22px; font-weight: 700;
+    color: var(--ink); margin-bottom: 0.5rem;
+  }
+  .form-success p { font-size: 15px; color: var(--ink2); }
+
+  /* ─── TOAST ─── */
   .toast {
     position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
     background: var(--ink); color: var(--paper);
@@ -368,32 +664,103 @@
   }
   .toast.show { transform: translateY(0); opacity: 1; }
 
+  /* ─── RESPONSIVE ─── */
+  @media(max-width: 1024px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+
   @media(max-width: 768px) {
     .hero { grid-template-columns: 1fr; padding: 100px 1.25rem 3rem; gap: 2rem; }
     .how-grid, .features-grid { grid-template-columns: 1fr; }
     .demo-grid { grid-template-columns: 1fr; }
+    .demo-toolbar { flex-direction: column; }
+    .demo-filters { flex-wrap: wrap; }
     nav { padding: 0 1.25rem; }
     .nav-links { display: none; }
+    .hamburger { display: flex; }
     section { padding: 3rem 1.25rem; }
-    .cta-section { margin: 0 1rem 3rem; }
+    .cta-section { margin: 0 1rem 3rem; padding: 3rem 1.5rem; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .creator-card { flex-direction: column; text-align: center; gap: 1.5rem; padding: 2rem 1.5rem; }
+    .creator-avatar { width: 130px; height: 130px; font-size: 54px; }
+    .creator-socials { justify-content: center; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .hero-stats { gap: 1.25rem; }
+    .stat-num { font-size: 22px; }
+    .pricing-grid { max-width: 100%; }
+  }
+
+  @media(max-width: 480px) {
+    h1 { font-size: 32px; }
+    h2 { font-size: 26px; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+    .modal { padding: 1.75rem; margin: 0.5rem; }
+    .hero-stats { flex-direction: column; gap: 1rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">Prompt<span>Pool</span></div>
+  <a class="nav-logo" href="#home">Prompt<span>Pool</span></a>
   <div class="nav-links">
-    <a href="#how">How it works</a>
-    <a href="#demo">Browse prompts</a>
-    <a href="#features">Features</a>
-    <a href="https://github.com" target="_blank">GitHub ↗</a>
+    <a href="#home">Home</a>
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact Us</a>
   </div>
-  <button class="nav-cta" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try free →</button>
+  <button class="nav-cta" onclick="openModal('demo')">Request a Demo</button>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="closeMobileMenu()">Home</a>
+  <a href="#about" onclick="closeMobileMenu()">About Us</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact Us</a>
+  <button class="nav-cta" onclick="closeMobileMenu(); openModal('demo')">Request a Demo</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalFormContent">
+      <div class="modal-title" id="modalTitle">Request a Demo</div>
+      <div class="modal-subtitle" id="modalSubtitle">Fill in your details and we'll get back to you shortly.</div>
+      <div class="form-group">
+        <label for="mName">Full Name</label>
+        <input type="text" id="mName" placeholder="John Doe" />
+      </div>
+      <div class="form-group">
+        <label for="mEmail">Email Address</label>
+        <input type="email" id="mEmail" placeholder="you@company.com" />
+      </div>
+      <div class="form-group">
+        <label for="mCompany">Company / Organization</label>
+        <input type="text" id="mCompany" placeholder="Acme Inc." />
+      </div>
+      <div class="form-group">
+        <label for="mMessage">Message (optional)</label>
+        <textarea id="mMessage" placeholder="Tell us about your needs..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitModal()">Submit Request</button>
+    </div>
+    <div class="form-success" id="modalSuccess">
+      <div class="success-icon">✓</div>
+      <h3>Thank you!</h3>
+      <p>We'll inform you once your demo is ready. Our team will reach out within 24 hours.</p>
+    </div>
+  </div>
+</div>
+
 <!-- HERO -->
-<div class="hero">
+<div class="hero" id="home">
   <div class="hero-left">
     <div class="hero-eyebrow">
       <span class="eyebrow-dot"></span>
@@ -402,10 +769,10 @@
     <h1>The <em>prompt library</em> you actually wanted</h1>
     <p class="hero-sub">Stop digging through Reddit threads. PromptPool is a free, open-source library of 1,800+ professionally cleaned prompts for every task—curated by an LLM pipeline so every prompt just works.</p>
     <div class="hero-actions">
-      <button class="btn-primary btn-pool" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
-        Browse prompts →
-      </button>
-      <a class="btn-ghost" href="https://github.com" target="_blank">⭐ Star on GitHub</a>
+      <a class="btn-primary btn-pool" href="https://www.producthunt.com" target="_blank">
+        🚀 View on Product Hunt
+      </a>
+      <a class="btn-ghost" href="#about">About Us →</a>
     </div>
     <div class="hero-stats">
       <div>
@@ -430,9 +797,7 @@
     </div>
 
     <div class="prompt-card" onclick="copyPrompt(this, 'You are a world-class copywriter. Write a compelling product description for [product] that targets [audience] and highlights [key benefit].')">
-      <div class="pc-top">
-        <span class="pc-cat cat-writing">✍️ Writing</span>
-      </div>
+      <div class="pc-top"><span class="pc-cat cat-writing">✍️ Writing</span></div>
       <div class="pc-title">Product Description Writer</div>
       <div class="pc-text">Write a compelling product description that converts browsers into buyers, with clear value proposition and CTA.</div>
       <div class="pc-footer">
@@ -441,10 +806,8 @@
       </div>
     </div>
 
-    <div class="prompt-card" onclick="copyPrompt(this, 'Review the following code and identify bugs, performance issues, and areas for improvement. Format your response as: Issues Found, Suggested Fixes, and Refactored Code.')">
-      <div class="pc-top">
-        <span class="pc-cat cat-code">💻 Code</span>
-      </div>
+    <div class="prompt-card" onclick="copyPrompt(this, 'Review the following code and identify bugs, performance issues, and areas for improvement.')">
+      <div class="pc-top"><span class="pc-cat cat-code">💻 Code</span></div>
       <div class="pc-title">Code Review Expert</div>
       <div class="pc-text">Deep-dive code review that catches bugs, flags performance issues, and suggests refactors with examples.</div>
       <div class="pc-footer">
@@ -453,10 +816,8 @@
       </div>
     </div>
 
-    <div class="prompt-card" onclick="copyPrompt(this, 'Analyze the following data and provide: 1) Key trends and patterns 2) Anomalies or outliers 3) Actionable recommendations 4) Visualization suggestions. Data: [paste data here]')">
-      <div class="pc-top">
-        <span class="pc-cat cat-analysis">📊 Analysis</span>
-      </div>
+    <div class="prompt-card" onclick="copyPrompt(this, 'Analyze the following data and provide: 1) Key trends 2) Anomalies 3) Recommendations.')">
+      <div class="pc-top"><span class="pc-cat cat-analysis">📊 Analysis</span></div>
       <div class="pc-title">Data Insights Generator</div>
       <div class="pc-text">Turn raw data into structured insights with trend analysis, anomaly detection, and clear recommendations.</div>
       <div class="pc-footer">
@@ -497,11 +858,11 @@
 </section>
 
 <!-- LIVE DEMO -->
-<section id="demo">
+<section id="demo-section">
   <div class="section-inner">
-    <div class="section-label">Live demo</div>
+    <div class="section-label">Prompt Library</div>
     <h2>Browse. Click. Use. Done.</h2>
-    <p class="section-sub">Try it right now. Search, filter by category, and run any prompt against live AI to preview the output before you copy.</p>
+    <p class="section-sub">Search, filter by category, and run any prompt against live AI to preview the output before you copy.</p>
 
     <div class="demo-wrap">
       <div class="demo-toolbar">
@@ -574,154 +935,215 @@
   </div>
 </section>
 
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2>Simple plans for every team</h2>
+    <p class="section-sub">Start free, scale when you're ready. No hidden fees, no surprises.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-desc">For individuals getting started</div>
+        <div class="price-amount">$0 <span class="per">/ forever</span></div>
+        <ul class="price-features">
+          <li>Access to 500+ prompts</li>
+          <li>Basic search & filters</li>
+          <li>Community support</li>
+          <li>Copy to clipboard</li>
+        </ul>
+        <button class="price-btn outline" onclick="openModal('free')">Get Started Free</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-name">Pro</div>
+        <div class="price-desc">For professionals & power users</div>
+        <div class="price-amount">$12 <span class="per">/ month</span></div>
+        <ul class="price-features">
+          <li>Full library — 1,800+ prompts</li>
+          <li>Live AI preview</li>
+          <li>Priority new prompts</li>
+          <li>Custom collections</li>
+          <li>API access</li>
+        </ul>
+        <button class="price-btn primary" onclick="openModal('pro')">Get Pro Access</button>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Team</div>
+        <div class="price-desc">For teams & organizations</div>
+        <div class="price-amount">$29 <span class="per">/ user / mo</span></div>
+        <ul class="price-features">
+          <li>Everything in Pro</li>
+          <li>Team shared collections</li>
+          <li>Admin dashboard</li>
+          <li>SSO & security controls</li>
+          <li>Dedicated support</li>
+        </ul>
+        <button class="price-btn outline" onclick="openModal('team')">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEET THE CREATOR -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">Meet the Creator</div>
+    <h2>The mind behind PromptPool</h2>
+    <p class="section-sub">Built with passion, shipped with purpose.</p>
+    <div class="creator-card">
+      <div class="creator-avatar">👨‍💻</div>
+      <div class="creator-info">
+        <div class="creator-name">Alex Mercer</div>
+        <div class="creator-role">Founder & CEO, PromptPool</div>
+        <p class="creator-bio">Alex Mercer is a product engineer and AI enthusiast with over a decade of experience building developer tools and data-driven platforms. After spending five years leading engineering teams at early-stage startups in San Francisco and Bangalore, Alex noticed a recurring frustration: every team was reinventing the wheel when it came to crafting effective AI prompts. Developers, writers, and analysts were all searching the same forums, copy-pasting the same half-broken prompts, and wasting hours tweaking them to work. That frustration became the spark behind PromptPool—an open-source, community-curated prompt library designed to save time and elevate output quality. Alex holds a Master's degree in Computer Science from Stanford University and has contributed to several open-source NLP projects. When not building PromptPool, Alex enjoys trail running in the Himalayas, experimenting with sourdough recipes, and mentoring first-time founders through local incubator programs. Alex believes that the best tools are the ones that get out of your way and let you focus on what matters.</p>
+        <div class="creator-socials">
+          <a href="#" title="Twitter">𝕏</a>
+          <a href="#" title="LinkedIn">in</a>
+          <a href="#" title="GitHub">⌨</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT US -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label">Contact Us</div>
+    <h2>Let's start a conversation</h2>
+    <p class="section-sub">Have questions, feedback, or partnership ideas? We'd love to hear from you.</p>
+    <div class="contact-layout">
+      <div class="contact-info-card">
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📧</div>
+          <div class="contact-detail-text">
+            <h4>Email Us</h4>
+            <p>hello@promptpool.dev</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">💬</div>
+          <div class="contact-detail-text">
+            <h4>Community</h4>
+            <p>Join our Discord for support and discussions</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div class="contact-detail-text">
+            <h4>Location</h4>
+            <p>San Francisco, CA — Remote-first team</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⏰</div>
+          <div class="contact-detail-text">
+            <h4>Response Time</h4>
+            <p>We typically respond within 24 hours</p>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <div id="contactFormContent">
+          <div class="form-group">
+            <label for="cName">Full Name</label>
+            <input type="text" id="cName" placeholder="John Doe" />
+          </div>
+          <div class="form-group">
+            <label for="cEmail">Email Address</label>
+            <input type="email" id="cEmail" placeholder="you@company.com" />
+          </div>
+          <div class="form-group">
+            <label for="cSubject">Subject</label>
+            <select id="cSubject">
+              <option value="">Select a topic...</option>
+              <option>General Inquiry</option>
+              <option>Partnership</option>
+              <option>Bug Report</option>
+              <option>Feature Request</option>
+              <option>Press & Media</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cMessage">Message</label>
+            <textarea id="cMessage" placeholder="How can we help?"></textarea>
+          </div>
+          <button class="form-submit" onclick="submitContact()">Send Message</button>
+        </div>
+        <div class="form-success" id="contactSuccess">
+          <div class="success-icon">✓</div>
+          <h3>Message Sent!</h3>
+          <p>We'll inform you once we've reviewed your message. Expect a reply within 24 hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <div class="section-inner">
   <div class="cta-section">
     <h2>Stop searching. Start prompting.</h2>
     <p class="section-sub">1,800+ clean, tested prompts—free forever. No account required.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <button class="btn-primary btn-pool" style="font-size:16px;padding:14px 28px" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Browse prompts →</button>
-      <a class="btn-ghost" href="https://github.com" target="_blank" style="color:rgba(245,243,238,0.8);border-color:rgba(245,243,238,0.25)">View on GitHub</a>
+      <a class="btn-primary btn-pool" href="https://www.producthunt.com" target="_blank" style="font-size:16px;padding:14px 28px">🚀 View on Product Hunt</a>
+      <a class="btn-ghost" href="#about" style="color:rgba(245,243,238,0.8);border-color:rgba(245,243,238,0.25)">About Us →</a>
     </div>
   </div>
 </div>
 
+<!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Prompt<span>Pool</span></div>
-  <div class="footer-note">Free & open source · MIT License · 1,800+ prompts</div>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Prompt<span>Pool</span></div>
+        <p>The open-source prompt library that helps you write better prompts, faster. Curated by AI, refined by the community.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#demo-section">Browse Prompts</a>
+        <a href="https://www.producthunt.com" target="_blank">Product Hunt</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact Us</a>
+        <a href="#about">Meet the Creator</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-and-conditions.html">Terms & Conditions</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 PromptPool. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-and-conditions.html">Terms</a>
+        <a href="#contact">Support</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
+/* ─── PROMPT DATA ─── */
 const PROMPTS = [
-  {id:1,cat:'writing',catLabel:'Writing',title:'Cold Email That Actually Gets Replies',preview:'Write a concise, personalized cold email for [context] that leads with value and ends with a clear ask.',full:`Write a cold email for the following context:
-Product/Service: [your product]
-Target: [recipient's role and company type]
-Key benefit: [main value prop]
-
-Requirements:
-- Subject line: curiosity-driven, under 8 words
-- Opening: reference something specific about them
-- Body: 2-3 sentences on value, no fluff
-- CTA: one clear, low-friction ask
-- Tone: confident, peer-to-peer, not salesy`,tags:['email','outreach'],rating:'4.9',uses:'3.2k'},
-  {id:2,cat:'code',catLabel:'Code',title:'Code Review Expert',preview:'Deep code review covering bugs, performance issues, security risks, and refactoring opportunities.',full:`You are a senior software engineer conducting a thorough code review.
-
-Review the following code for:
-1. Bugs and logic errors
-2. Performance bottlenecks
-3. Security vulnerabilities
-4. Code smell and readability
-5. Test coverage gaps
-
-For each issue found:
-- Severity: Critical / Major / Minor
-- Explanation: what's wrong and why it matters
-- Fix: concrete corrected code snippet
-
-End with a refactored version of the most critical section.
-
-Code to review:
-[paste code here]`,tags:['code','review'],rating:'4.8',uses:'4.1k'},
-  {id:3,cat:'business',catLabel:'Business',title:'Investor Pitch One-Pager',preview:'Generate a one-page investor summary with problem, solution, traction, and ask in tight, compelling prose.',full:`Create a one-page investor summary for a startup with the following info:
-Company: [name]
-Stage: [pre-seed/seed/Series A]
-Industry: [sector]
-Details: [paste company description]
-
-Structure:
-**The Problem** (2 sentences max — make it visceral)
-**Our Solution** (2-3 sentences — what you do and how)
-**Why Now** (market timing, tail winds)
-**Traction** (key metrics, growth, social proof)
-**Business Model** (how you make money)
-**The Ask** (amount, use of funds, milestones)
-
-Tone: direct, confident, data-driven. No buzzwords.`,tags:['startup','fundraising'],rating:'4.9',uses:'2.7k'},
-  {id:4,cat:'research',catLabel:'Research',title:'Literature Review Synthesizer',preview:'Synthesize multiple papers or sources into a cohesive literature review with gaps and future directions.',full:`You are an academic research assistant. Synthesize the following sources into a structured literature review.
-
-Sources: [paste abstracts or paper summaries]
-Research question: [your question]
-
-Output format:
-1. **Overview** — common themes and consensus (3-4 sentences)
-2. **Key Findings** — bullet list of the most important discoveries
-3. **Methodological Approaches** — how researchers studied this
-4. **Contradictions & Debates** — where scholars disagree and why
-5. **Research Gaps** — what hasn't been studied yet
-6. **Future Directions** — promising next steps
-
-Use academic tone. Cite sources by [Author, Year] inline.`,tags:['academic','research'],rating:'4.7',uses:'1.9k'},
-  {id:5,cat:'writing',catLabel:'Writing',title:'Long-form Blog Post Framework',preview:'Create a detailed, SEO-aware blog post outline with hooks, H2s, and CTAs for any topic.',full:`You are an expert content strategist. Create a complete long-form blog post for:
-
-Topic: [topic]
-Target audience: [who will read this]
-Primary keyword: [SEO keyword]
-Tone: [professional/casual/technical]
-Length target: [~1500 / 2000 / 3000 words]
-
-Deliverables:
-- Attention-grabbing headline (5 options)
-- Hook intro (150 words) — story, stat, or provocative question
-- Full outline with H2s and H3s
-- Key points for each section (not full prose, just bullets)
-- Conclusion with CTA
-- Meta description (under 160 chars)
-- 5 related internal link anchor text suggestions`,tags:['seo','content'],rating:'4.8',uses:'5.6k'},
-  {id:6,cat:'code',catLabel:'Code',title:'SQL Query Optimizer',preview:'Analyze a slow SQL query and return an optimized version with explanation of changes made.',full:`You are a senior DBA and query optimization expert.
-
-Analyze the following SQL query and:
-1. Identify performance bottlenecks (missing indexes, N+1, full scans, etc.)
-2. Rewrite the query with optimizations applied
-3. Explain each change you made and why it helps
-4. Suggest relevant indexes to create (with CREATE INDEX statements)
-5. Estimate the performance improvement (rough %)
-
-Database: [PostgreSQL / MySQL / SQLite / other]
-Table sizes: [optional — e.g., orders table: 10M rows]
-
-Query:
-[paste your SQL here]`,tags:['sql','database'],rating:'4.7',uses:'3.8k'},
-  {id:7,cat:'business',catLabel:'Business',title:'SWOT Analysis Generator',preview:'Produce a thorough SWOT for any company, product, or decision using structured strategic thinking.',full:`Conduct a comprehensive SWOT analysis for:
-Subject: [company / product / decision / strategy]
-Context: [industry, stage, competitive landscape]
-
-Format:
-
-**STRENGTHS** (internal positives)
-- List 5-7 genuine competitive advantages
-- For each: why it matters strategically
-
-**WEAKNESSES** (internal negatives)
-- List 4-6 honest internal gaps or risks
-- For each: business impact
-
-**OPPORTUNITIES** (external positives)
-- List 5-7 market or trend opportunities
-- For each: how to capitalize
-
-**THREATS** (external negatives)
-- List 4-6 external risks or competitive pressures
-- For each: mitigation approach
-
-**Strategic priorities** — Top 3 actions based on this SWOT`,tags:['strategy','planning'],rating:'4.6',uses:'2.1k'},
-  {id:8,cat:'research',catLabel:'Research',title:'Competitive Intelligence Brief',preview:'Build a structured competitive analysis for any company using publicly available information.',full:`You are a competitive intelligence analyst. Create a detailed competitive brief for:
-
-My company: [your company + product]
-Competitor: [competitor name]
-
-Research and structure the following:
-1. **Company Overview** — size, funding, market position
-2. **Product Analysis** — features, pricing tiers, positioning
-3. **Strengths vs Us** — where they outperform you
-4. **Weaknesses vs Us** — where you have the edge
-5. **Customer Sentiment** — what users love/hate (use review patterns)
-6. **Go-to-Market** — channels, messaging, ICP
-7. **Likely Next Moves** — product roadmap signals
-8. **Our Recommended Response** — 3 tactical actions
-
-Be specific. Avoid vague generalities.`,tags:['competitive','strategy'],rating:'4.8',uses:'1.6k'},
+  {id:1,cat:'writing',catLabel:'Writing',title:'Cold Email That Actually Gets Replies',preview:'Write a concise, personalized cold email for [context] that leads with value and ends with a clear ask.',full:`Write a cold email for the following context:\nProduct/Service: [your product]\nTarget: [recipient's role and company type]\nKey benefit: [main value prop]\n\nRequirements:\n- Subject line: curiosity-driven, under 8 words\n- Opening: reference something specific about them\n- Body: 2-3 sentences on value, no fluff\n- CTA: one clear, low-friction ask\n- Tone: confident, peer-to-peer, not salesy`,tags:['email','outreach'],rating:'4.9',uses:'3.2k'},
+  {id:2,cat:'code',catLabel:'Code',title:'Code Review Expert',preview:'Deep code review covering bugs, performance issues, security risks, and refactoring opportunities.',full:`You are a senior software engineer conducting a thorough code review.\n\nReview the following code for:\n1. Bugs and logic errors\n2. Performance bottlenecks\n3. Security vulnerabilities\n4. Code smell and readability\n5. Test coverage gaps\n\nFor each issue found:\n- Severity: Critical / Major / Minor\n- Explanation: what's wrong and why it matters\n- Fix: concrete corrected code snippet\n\nEnd with a refactored version of the most critical section.\n\nCode to review:\n[paste code here]`,tags:['code','review'],rating:'4.8',uses:'4.1k'},
+  {id:3,cat:'business',catLabel:'Business',title:'Investor Pitch One-Pager',preview:'Generate a one-page investor summary with problem, solution, traction, and ask in tight, compelling prose.',full:`Create a one-page investor summary for a startup with the following info:\nCompany: [name]\nStage: [pre-seed/seed/Series A]\nIndustry: [sector]\nDetails: [paste company description]\n\nStructure:\n**The Problem** (2 sentences max)\n**Our Solution** (2-3 sentences)\n**Why Now** (market timing)\n**Traction** (key metrics)\n**Business Model** (how you make money)\n**The Ask** (amount, use of funds)`,tags:['startup','fundraising'],rating:'4.9',uses:'2.7k'},
+  {id:4,cat:'research',catLabel:'Research',title:'Literature Review Synthesizer',preview:'Synthesize multiple papers or sources into a cohesive literature review with gaps and future directions.',full:`You are an academic research assistant. Synthesize the following sources into a structured literature review.\n\nSources: [paste abstracts]\nResearch question: [your question]\n\nOutput format:\n1. Overview\n2. Key Findings\n3. Methodological Approaches\n4. Contradictions & Debates\n5. Research Gaps\n6. Future Directions`,tags:['academic','research'],rating:'4.7',uses:'1.9k'},
+  {id:5,cat:'writing',catLabel:'Writing',title:'Long-form Blog Post Framework',preview:'Create a detailed, SEO-aware blog post outline with hooks, H2s, and CTAs for any topic.',full:`You are an expert content strategist. Create a complete long-form blog post for:\n\nTopic: [topic]\nTarget audience: [who]\nPrimary keyword: [SEO keyword]\nTone: [professional/casual/technical]\nLength target: [~1500 / 2000 / 3000 words]\n\nDeliverables:\n- Headline (5 options)\n- Hook intro (150 words)\n- Full outline with H2s and H3s\n- Key points for each section\n- Conclusion with CTA\n- Meta description`,tags:['seo','content'],rating:'4.8',uses:'5.6k'},
+  {id:6,cat:'code',catLabel:'Code',title:'SQL Query Optimizer',preview:'Analyze a slow SQL query and return an optimized version with explanation of changes made.',full:`You are a senior DBA.\n\nAnalyze the following SQL query and:\n1. Identify performance bottlenecks\n2. Rewrite with optimizations\n3. Explain each change\n4. Suggest relevant indexes\n5. Estimate improvement\n\nDatabase: [PostgreSQL / MySQL]\nTable sizes: [optional]\n\nQuery:\n[paste your SQL here]`,tags:['sql','database'],rating:'4.7',uses:'3.8k'},
+  {id:7,cat:'business',catLabel:'Business',title:'SWOT Analysis Generator',preview:'Produce a thorough SWOT for any company, product, or decision using structured strategic thinking.',full:`Conduct a comprehensive SWOT analysis for:\nSubject: [company / product]\nContext: [industry, stage]\n\nFormat:\n**STRENGTHS** - 5-7 advantages\n**WEAKNESSES** - 4-6 gaps\n**OPPORTUNITIES** - 5-7 opportunities\n**THREATS** - 4-6 risks\n**Strategic priorities** — Top 3 actions`,tags:['strategy','planning'],rating:'4.6',uses:'2.1k'},
+  {id:8,cat:'research',catLabel:'Research',title:'Competitive Intelligence Brief',preview:'Build a structured competitive analysis for any company using publicly available information.',full:`Create a competitive brief for:\nMy company: [your company]\nCompetitor: [competitor name]\n\nStructure:\n1. Company Overview\n2. Product Analysis\n3. Strengths vs Us\n4. Weaknesses vs Us\n5. Customer Sentiment\n6. Go-to-Market\n7. Likely Next Moves\n8. Recommended Response`,tags:['competitive','strategy'],rating:'4.8',uses:'1.6k'},
 ];
 
 let activeFilter = 'all';
@@ -784,135 +1206,14 @@ function copySelected() {
 }
 
 const DEMO_OUTPUTS = {
-  1: `**Subject:** Quick question about [Company's] growth strategy
-
-Hi [Name],
-
-I noticed [Company] just expanded into [market] — congrats on the momentum. We help companies like yours [specific benefit, e.g., "reduce onboarding drop-off by 40%"] without changing your existing stack.
-
-Worth a 15-minute call this week? I can show you exactly how [similar company] did it.
-
-[Your name]`,
-  2: `**Code Review Report**
-
-**Critical Issues:**
-• Line 47: SQL injection vulnerability — user input is concatenated directly into query string. Fix: use parameterized queries.
-• Line 83: N+1 query detected inside loop — will fire 1 query per record. Fix: batch with a single JOIN query.
-
-**Major Issues:**
-• Lines 12-34: No error handling on async calls — unhandled promise rejections will crash silently.
-• Missing input validation on the \`userId\` parameter.
-
-**Refactored critical section:**
-\`\`\`js
-const users = await db.query(
-  'SELECT * FROM users WHERE id = $1',
-  [userId]
-);
-\`\`\``,
-  3: `**TechFlow — Investor Summary**
-
-**The Problem**
-B2B sales teams waste 40% of their time on manual CRM updates. That's not a productivity issue—it's a revenue leak.
-
-**Our Solution**
-TechFlow auto-logs every call, email, and meeting into your CRM using voice AI, eliminating manual entry entirely.
-
-**Traction**
-$180K ARR · 40% MoM growth · 12 design partners · NPS 72
-
-**The Ask**
-Raising $1.5M pre-seed to hire 2 engineers and reach $500K ARR by Q3.`,
-  4: `**Literature Review: Remote Work Productivity**
-
-**Overview**
-Research from 2020-2024 shows mixed outcomes for remote work productivity, with strong consensus that impact varies significantly by role type, team cohesion, and individual personality.
-
-**Key Findings**
-• Knowledge workers report 13-22% productivity gains when working from home (Stanford, 2021)
-• Collaboration tasks show a 18% efficiency decline without structured async practices
-• Mental health outcomes improved for workers with dedicated home offices
-
-**Research Gaps**
-Longitudinal studies beyond 2 years remain scarce. Cross-cultural comparisons are underrepresented.`,
-  5: `**5 Headline Options:**
-1. "Why 90% of SaaS companies get churn wrong (and how to fix it)"
-2. "The churn reduction playbook that recovered $2M ARR"
-3. "Stop fighting churn. Start preventing it."
-4. "The counterintuitive reason your best customers leave"
-5. "Churn is a symptom. Here's what to treat."
-
-**Hook (150 words):**
-In 2022, we watched $180,000 in ARR walk out the door in a single quarter. Our NPS was 52. Support tickets were low. On paper, everything looked fine. The problem wasn't our product—it was what we weren't seeing. Churn rarely announces itself...`,
-  6: `**Performance Analysis:**
-
-Issues found:
-• Full table scan on \`orders\` (missing index on \`created_at\`)
-• Correlated subquery in SELECT runs once per row (N+1)
-• Unnecessary DISTINCT on indexed column
-
-**Optimized Query:**
-\`\`\`sql
-SELECT o.id, o.total, u.email
-FROM orders o
-INNER JOIN users u ON u.id = o.user_id
-WHERE o.created_at >= NOW() - INTERVAL '30 days'
-  AND o.status = 'completed'
-ORDER BY o.created_at DESC;
-\`\`\`
-
-**Indexes to add:**
-\`\`\`sql
-CREATE INDEX idx_orders_created_status 
-ON orders(created_at, status);
-\`\`\`
-Estimated improvement: ~8x faster on 10M row table.`,
-  7: `**SWOT Analysis: Notion**
-
-**STRENGTHS**
-• Extreme flexibility — adapts to any workflow
-• Strong brand love and word-of-mouth growth
-• Broad template ecosystem reduces onboarding friction
-
-**WEAKNESSES**
-• Steep learning curve for non-technical users
-• Performance degrades on large databases
-• No native offline mode
-
-**OPPORTUNITIES**
-• AI integration is still early — first-mover advantage in AI-native notes
-• Enterprise expansion (currently SMB-heavy)
-
-**THREATS**
-• Linear, Coda, and Obsidian are each capturing specific niches
-• Microsoft Loop deeply integrated with M365 ecosystem
-
-**Top 3 Strategic Priorities:**
-1. Launch AI features before competitors solidify positioning
-2. Build enterprise SSO and admin controls
-3. Optimize mobile performance`,
-  8: `**Competitive Brief: Notion vs Coda**
-
-**Company Overview**
-Coda: ~$130M raised, Series D, ~200 employees, SF-based. Positioned as "the doc that can do everything."
-
-**Product Analysis**
-• Pricing: Free tier limited; Team plan $10/user/mo (vs Notion's $8)
-• Unique: Packs ecosystem — pre-built integrations that behave like mini-apps
-• Weakness: Steeper learning curve than Notion; smaller template library
-
-**Strengths vs Notion**
-✓ More powerful formula/automation layer
-✓ Better for data-heavy use cases (internal tools, trackers)
-
-**Weaknesses vs Notion**
-✗ 3x smaller user base and community
-✗ Brand awareness significantly lower
-
-**Our Recommended Response**
-1. Double down on ease-of-use messaging vs Coda's complexity
-2. Build data/table features that close the gap
-3. Target Coda churned users with migration wizard`,
+  1: `**Subject:** Quick question about [Company's] growth strategy\n\nHi [Name],\n\nI noticed [Company] just expanded into [market] — congrats on the momentum. We help companies like yours [specific benefit].\n\nWorth a 15-minute call this week?\n\n[Your name]`,
+  2: `**Code Review Report**\n\n**Critical Issues:**\n• Line 47: SQL injection vulnerability\n• Line 83: N+1 query detected\n\n**Major Issues:**\n• Lines 12-34: No error handling on async calls\n• Missing input validation`,
+  3: `**TechFlow — Investor Summary**\n\n**The Problem**\nB2B sales teams waste 40% of their time on manual CRM updates.\n\n**Our Solution**\nTechFlow auto-logs every call, email, and meeting into your CRM using voice AI.\n\n**Traction**\n$180K ARR · 40% MoM growth`,
+  4: `**Literature Review: Remote Work Productivity**\n\n**Overview**\nResearch from 2020-2024 shows mixed outcomes.\n\n**Key Findings**\n• Knowledge workers report 13-22% productivity gains\n• Collaboration tasks show 18% efficiency decline`,
+  5: `**5 Headline Options:**\n1. "Why 90% of SaaS companies get churn wrong"\n2. "The churn reduction playbook that recovered $2M ARR"\n3. "Stop fighting churn. Start preventing it."`,
+  6: `**Performance Analysis:**\n\nIssues found:\n• Full table scan on orders (missing index)\n• Correlated subquery in SELECT (N+1)\n\n**Optimized Query provided.**\nEstimated improvement: ~8x faster.`,
+  7: `**SWOT Analysis: Notion**\n\n**STRENGTHS**\n• Extreme flexibility\n• Strong brand love\n\n**WEAKNESSES**\n• Steep learning curve\n• Performance degrades on large databases`,
+  8: `**Competitive Brief: Notion vs Coda**\n\n**Product Analysis**\n• Pricing: Free tier limited; Team plan $10/user/mo\n• Unique: Packs ecosystem`,
 };
 
 async function runDemo() {
@@ -923,7 +1224,6 @@ async function runDemo() {
   resultEl.innerHTML = '<span class="typing-cursor"></span>';
 
   const output = DEMO_OUTPUTS[selectedId] || 'Output preview not available for this prompt in the demo.';
-
   await new Promise(r => setTimeout(r, 600));
 
   let i = 0;
@@ -960,7 +1260,75 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+/* ─── MODAL ─── */
+const modalTitles = {
+  demo: { title: 'Request a Demo', subtitle: 'Fill in your details and we\'ll schedule a personalized walkthrough.' },
+  free: { title: 'Get Started Free', subtitle: 'Create your free account to start browsing prompts.' },
+  pro: { title: 'Get Pro Access', subtitle: 'Enter your details and we\'ll set up your Pro account.' },
+  team: { title: 'Contact Sales', subtitle: 'Tell us about your team and we\'ll prepare a custom proposal.' },
+};
+
+function openModal(type) {
+  const cfg = modalTitles[type] || modalTitles.demo;
+  document.getElementById('modalTitle').textContent = cfg.title;
+  document.getElementById('modalSubtitle').textContent = cfg.subtitle;
+  document.getElementById('modalFormContent').style.display = 'block';
+  document.getElementById('modalSuccess').classList.remove('show');
+  document.getElementById('mName').value = '';
+  document.getElementById('mEmail').value = '';
+  document.getElementById('mCompany').value = '';
+  document.getElementById('mMessage').value = '';
+  document.getElementById('modalOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function submitModal() {
+  const name = document.getElementById('mName').value.trim();
+  const email = document.getElementById('mEmail').value.trim();
+  if(!name || !email) {
+    showToast('Please fill in your name and email.');
+    return;
+  }
+  document.getElementById('modalFormContent').style.display = 'none';
+  document.getElementById('modalSuccess').classList.add('show');
+}
+
+function submitContact() {
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const message = document.getElementById('cMessage').value.trim();
+  if(!name || !email || !message) {
+    showToast('Please fill in all required fields.');
+    return;
+  }
+  document.getElementById('contactFormContent').style.display = 'none';
+  document.getElementById('contactSuccess').classList.add('show');
+}
+
+/* ─── MOBILE MENU ─── */
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  menu.classList.toggle('show');
+  btn.classList.toggle('active');
+  document.body.style.overflow = menu.classList.contains('show') ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('show');
+  document.getElementById('hamburgerBtn').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/* ─── INIT ─── */
 renderPrompts(PROMPTS);
+
+/* Close modal on Escape */
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>
